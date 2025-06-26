@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 import pytz
+import os
 from typing import Dict, List
 
 class CalendarHandler:
     def __init__(self):
         self.timezone = "Europe/Amsterdam"
-        self.user_email = "clararende@squareup.com"
+        self.user_email = os.getenv("USER_EMAIL", "")
 
     def get_todays_events(self) -> List[Dict]:
         """Get today's calendar events using the Google Calendar API."""

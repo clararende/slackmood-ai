@@ -2,8 +2,8 @@
 
 # User settings
 user:
-  location: "Amsterdam, NL"
-  timezone: "Europe/Amsterdam"
+  location: "${LOCATION}"  # Set via environment variable
+  timezone: "${TIMEZONE}"  # Set via environment variable
   work_hours:
     start: "09:00"
     end: "17:00"

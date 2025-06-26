@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class CalendarHandler:
     def __init__(self):
-        self.timezone = "Europe/Amsterdam"
+        self.timezone = os.getenv("TIMEZONE", "Europe/Amsterdam")
 
     def get_todays_events(self) -> List[Dict]:
         """Get today's calendar events."""
@@ -83,8 +83,9 @@ class StatusGenerator:
     def generate_status(self, calendar_summary: Dict, weather_data: Dict) -> Dict:
         """Generate appropriate status based on calendar and weather."""
         # We'll implement the status generation logic here
+        location = os.getenv("LOCATION", "Amsterdam")
         return {
-            "text": "Working from Amsterdam",
+            "text": f"Working from {location}",
             "emoji": "💻",
             "expiration": None
         }
