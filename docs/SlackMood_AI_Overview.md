@@ -67,7 +67,7 @@ OOO | "Recharging my batteries" | 🌴
 
 ### Installation in 3... 2... 1... 🚀
 ```bash
-git clone https://github.com/your-username/slackmood-ai.git
+git clone https://github.com/clararende/slackmood-ai.git
 cd slackmood-ai
 ./install.sh
 ```
@@ -127,7 +127,7 @@ Born from the desire to make workplace communication more human and fun, SlackMo
 4. Watch your Slack status come alive!
 
 ### Links & Resources 🔗
-- GitHub Repository: https://github.com/your-username/slackmood-ai
+- GitHub Repository: https://github.com/clararende/slackmood-ai
 - Documentation: See README.md
 - Issues & Features: GitHub Issues
 
