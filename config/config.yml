@@ -1,0 +1,40 @@
+# Configuration for Slack Calendar Status
+
+# User settings
+user:
+  location: "Amsterdam, NL"
+  timezone: "Europe/Amsterdam"
+  work_hours:
+    start: "09:00"
+    end: "17:00"
+
+# Status update settings
+status:
+  update_frequency: "1h"  # How often to check for updates
+  morning_update: "07:00"  # When to do the main morning update
+
+# Status message templates
+templates:
+  meeting_heavy: "In meetings {time_period} {weather_emoji} {location}"
+  wfh: "WFH today {weather_emoji} {location}"
+  ooo: "OOO {time_period} {emoji}"
+  focus_time: "Focus time {emoji} {weather_emoji} {location}"
+  traveling: "Traveling {emoji} → {location}"
+
+# Weather settings
+weather:
+  api: "openweathermap"  # We'll use OpenWeatherMap API
+  update_frequency: "1h"  # How often to fetch new weather data
+
+# Emoji mappings
+weather_emoji:
+  clear: "☀️"
+  rain: "🌧️"
+  clouds: "☁️"
+  snow: "❄️"
+  
+activity_emoji:
+  meeting: "🗣️"
+  focus: "💻"
+  travel: "✈️"
+  ooo: "🏖️"
