@@ -114,11 +114,11 @@ Born from the desire to make workplace communication more human and fun, SlackMo
    - Improved work culture
 
 ### Future Possibilities 🔮
-- Weather integration for more contextual updates
 - Custom message templates
 - Team-wide status coordination
 - More fun emoji combinations
 - Integration with other workplace tools
+- Advanced calendar pattern recognition
 
 ### Get Started! 🎉
 1. Clone the repository

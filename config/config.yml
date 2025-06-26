@@ -1,40 +1,27 @@
-# Configuration for Slackmood-ai
+# SlackMood AI Configuration
 
 # User settings
 user:
-  location: "${LOCATION}"  # Set via environment variable
-  timezone: "${TIMEZONE}"  # Set via environment variable
-  work_hours:
-    start: "09:00"
-    end: "17:00"
+  location: "Amsterdam,NL"
+  timezone: "Europe/Amsterdam"
 
-# Status update settings
-status:
-  update_frequency: "1h"  # How often to check for updates
-  morning_update: "07:00"  # When to do the main morning update
-
-# Status message templates
+# Status templates
 templates:
-  meeting_heavy: "In meetings {time_period} {weather_emoji} {location}"
-  wfh: "WFH today {weather_emoji} {location}"
-  ooo: "OOO {time_period} {emoji}"
-  focus_time: "Focus time {emoji} {weather_emoji} {location}"
-  traveling: "Traveling {emoji} → {location}"
+  meeting_light: "In meetings {time_period}"
+  meeting_moderate: "Meeting mode {time_period}"
+  meeting_heavy: "In meetings {time_period}"
+  wfh: "WFH today"
+  ooo: "Out of office"
+  focus_time: "Focus time {emoji}"
+  traveling: "Traveling {emoji}"
+  working: "Working {emoji}"
 
-# Weather settings
-weather:
-  api: "openweathermap"  # We'll use OpenWeatherMap API
-  update_frequency: "1h"  # How often to fetch new weather data
-
-# Emoji mappings
-weather_emoji:
-  clear: "☀️"
-  rain: "🌧️"
-  clouds: "☁️"
-  snow: "❄️"
-  
+# Activity emojis
 activity_emoji:
   meeting: "🗣️"
-  focus: "💻"
+  focus: "🧘‍♀️"
   travel: "✈️"
   ooo: "🏖️"
+  working: "💻"
+  design: "🎨"
+  coding: "💻"

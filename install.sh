@@ -1,98 +1,92 @@
 #!/bin/bash
 
 # Colors for output
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
 RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}Installing SlackMood AI...${NC}"
+echo -e "${BLUE}SlackMood AI Installation Script${NC}"
+echo -e "${BLUE}==============================${NC}"
+echo ""
 
-# Check if uvx is installed
-if ! command -v uvx &> /dev/null; then
-    echo -e "\n${BLUE}Installing uvx (required for MCP servers)...${NC}"
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    export PATH="$HOME/.local/bin:$PATH"
-    echo -e "${GREEN}uvx installed successfully!${NC}"
-else
-    echo -e "\n${BLUE}uvx is already installed${NC}"
+# Check if Python 3 is installed
+if ! command -v python3 &> /dev/null; then
+    echo -e "${RED}Python 3 is not installed. Please install Python 3.8 or higher.${NC}"
+    exit 1
 fi
 
+# Check Python version
+PYTHON_VERSION=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+REQUIRED_VERSION="3.8"
+
+if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$PYTHON_VERSION" | sort -V | head -n1)" != "$REQUIRED_VERSION" ]; then
+    echo -e "${RED}Python version $PYTHON_VERSION is too old. Please install Python 3.8 or higher.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✓ Python 3.8+ is installed${NC}"
+
 # Create virtual environment
-echo -e "\n${BLUE}Creating Python virtual environment...${NC}"
+echo -e "${BLUE}Creating virtual environment...${NC}"
 python3 -m venv venv
 source venv/bin/activate
 
-# Install dependencies with --no-deps to avoid hash verification
-echo -e "\n${BLUE}Installing dependencies...${NC}"
-pip install --no-deps requests
-pip install --no-deps pytz
+# Install dependencies
+echo -e "${BLUE}Installing dependencies...${NC}"
+pip install --upgrade pip
+pip install -r requirements.txt
 
-# Create config directory if it doesn't exist
-echo -e "\n${BLUE}Setting up configuration...${NC}"
-mkdir -p config
-
-# Create .env file
-echo -e "\n${BLUE}Creating environment file...${NC}"
+# Create .env file if it doesn't exist
 if [ ! -f .env ]; then
-    cat > .env << EOL
-OPENWEATHER_API_KEY=""
+    echo -e "${BLUE}Creating .env file...${NC}"
+    cat > .env << EOF
 USER_EMAIL=""
 TIMEZONE="Europe/Amsterdam"
 LOCATION="Amsterdam,NL"
-EOL
-    echo -e "${GREEN}Created .env file. Please edit it with your settings.${NC}"
+EOF
+    echo -e "${YELLOW}⚠️  Please edit .env file and set your USER_EMAIL${NC}"
 else
-    echo -e "${BLUE}.env file already exists${NC}"
+    echo -e "${GREEN}✓ .env file already exists${NC}"
 fi
 
 # Create logs directory
 mkdir -p logs
-touch logs/cron.log
 
-# Set permissions
-chmod +x src/run.py
-
-# Create a wrapper script for the cron job
-cat > run_with_env.sh << EOL
+# Create run_with_env.sh script
+echo -e "${BLUE}Creating run script...${NC}"
+cat > run_with_env.sh << 'EOF'
 #!/bin/bash
-cd "\$(dirname "\$0")"
+cd "$(dirname "$0")"
 source venv/bin/activate
-./src/run.py >> logs/cron.log 2>&1
-EOL
+source .env
+export PATH="$HOME/.local/bin:$PATH"
+python3 src/run.py
+EOF
 
 chmod +x run_with_env.sh
 
-# Create temporary cron file
-TEMP_CRON=$(mktemp)
-crontab -l > "$TEMP_CRON" 2>/dev/null
+# Set up cron job
+echo -e "${BLUE}Setting up automatic updates...${NC}"
+CRON_JOB="0 7 * * * $(pwd)/run_with_env.sh"
 
-# Add our job if it's not already there
-if ! grep -q "slackmood-ai" "$TEMP_CRON"; then
-    echo "0 7 * * * $(pwd)/run_with_env.sh" >> "$TEMP_CRON"
-    crontab "$TEMP_CRON"
-    echo -e "${GREEN}Cron job installed successfully!${NC}"
+# Check if cron job already exists
+if crontab -l 2>/dev/null | grep -q "run_with_env.sh"; then
+    echo -e "${GREEN}✓ Cron job already exists${NC}"
 else
-    echo -e "${BLUE}Cron job already exists${NC}"
+    (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+    echo -e "${GREEN}✓ Cron job added (runs daily at 7 AM)${NC}"
 fi
-rm "$TEMP_CRON"
 
-echo -e "\n${GREEN}Installation complete!${NC}"
-echo -e "Your status will be automatically updated every morning at 7 AM."
-echo -e "You can also run it manually with: ${BLUE}./run_with_env.sh${NC}"
-echo -e "\nCheck ${BLUE}logs/cron.log${NC} for execution logs."
-
-# Add note about required extensions
-echo -e "\n${BLUE}Required Goose Extensions:${NC}"
-echo -e "1. Google Calendar Extension (mcp_gcal@latest)"
-echo -e "2. Slack Extension (mcp_slack)"
-echo -e "\nPlease ensure these extensions are enabled in your Goose settings:"
-echo -e "  ${BLUE}goose configure${NC}"
-
-echo -e "\n${BLUE}Next steps:${NC}"
-echo -e "1. Configure Goose extensions: ${BLUE}goose configure${NC}"
-echo -e "2. Edit .env file with your settings:"
-echo -e "   - Add your email"
-echo -e "   - Update timezone if needed"
-echo -e "   - Update location if needed"
-echo -e "3. Test the setup by running: ${BLUE}goose run --text \"Run SlackMood AI\"${NC}"
+echo ""
+echo -e "${GREEN}Installation completed successfully!${NC}"
+echo ""
+echo -e "${BLUE}Next steps:${NC}"
+echo -e "1. Edit .env file and set your USER_EMAIL"
+echo -e "2. Install Goose CLI: ${BLUE}curl -LsSf https://astral.sh/uv/install.sh | sh${NC}"
+echo -e "3. Configure Goose extensions: ${BLUE}goose configure${NC}"
+echo -e "4. Enable 'googlecalendar' and 'slack' extensions"
+echo -e "5. Test the setup by running: ${BLUE}goose run --text \"Run SlackMood AI\"${NC}"
+echo ""
+echo -e "${GREEN}Happy status updating! 🎉${NC}"

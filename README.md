@@ -1,6 +1,6 @@
 # SlackMood AI
 
-Automatically update your Slack status with fun, context-aware messages based on your Google Calendar events and local weather conditions.
+Automatically update your Slack status with fun, context-aware messages based on your Google Calendar events.
 
 ## Prerequisites
 
@@ -78,7 +78,6 @@ The installation script will:
 The following variables are configured in `.env`:
 
 ```ini
-OPENWEATHER_API_KEY="your-api-key"
 USER_EMAIL="your-email@example.com"  # REQUIRED: Must be set for the script to work
 TIMEZONE="Your/Timezone"
 LOCATION="City,Country"
