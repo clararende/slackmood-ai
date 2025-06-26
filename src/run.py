@@ -3,8 +3,6 @@
 import os
 import logging
 from datetime import datetime, timedelta
-import json
-import random
 from typing import Dict, List, Optional
 
 # Configure logging
@@ -14,26 +12,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def get_weather(location: str, api_key: str) -> Dict:
-    """Get weather data from OpenWeather API."""
-    import urllib.request
-    import urllib.parse
-    
-    base_url = "http://api.openweathermap.org/data/2.5/weather"
-    params = {
-        "q": location,
-        "appid": api_key,
-        "units": "metric"
-    }
-    
-    url = f"{base_url}?{urllib.parse.urlencode(params)}"
-    
-    try:
-        with urllib.request.urlopen(url) as response:
-            return json.loads(response.read())
-    except Exception as e:
-        logger.error(f"Error fetching weather: {e}")
-        return {}
+def query_calendar_database(query: str, time_min: str, time_max: str):
+    """Helper function to query the calendar database."""
+    from googlecalendar__query_calendar_database import query_calendar_database
+    return query_calendar_database(query=query, time_min=time_min, time_max=time_max)
 
 def get_todays_events(user_email: str) -> List[Dict]:
     """Get today's calendar events."""
@@ -58,8 +40,7 @@ def get_todays_events(user_email: str) -> List[Dict]:
     """
     
     try:
-        from googlecalendar__query_calendar_database import query_calendar_database
-        result = query_calendar_database(query=query, time_min=start, time_max=end)
+        result = query_calendar_database(query, start, end)
         return result
     except Exception as e:
         logger.error(f"Error querying calendar: {e}")
@@ -83,6 +64,11 @@ def analyze_calendar(events: List[Dict]) -> Dict:
         start_time = event.get("start_time")
         end_time = event.get("end_time")
         
+        if start_time and end_time:
+            # Calculate duration in minutes
+            duration = int((end_time - start_time).total_seconds() / 60)
+            total_meeting_minutes += duration
+        
         # Check for special events
         if "ooo" in summary or "out of office" in summary:
             analysis["ooo"] = True
@@ -90,14 +76,6 @@ def analyze_calendar(events: List[Dict]) -> Dict:
             analysis["focus_time"] = True
         elif any(word in summary for word in ["travel", "flight", "train"]):
             analysis["traveling"] = True
-        
-        # Count meeting time (assume 30 min if duration can't be calculated)
-        if start_time and end_time:
-            try:
-                duration = (end_time - start_time).total_seconds() / 60
-                total_meeting_minutes += duration
-            except:
-                total_meeting_minutes += 30
 
     # Calculate meeting density
     working_minutes = 8 * 60  # 8-hour workday
@@ -110,24 +88,64 @@ def analyze_calendar(events: List[Dict]) -> Dict:
     
     return analysis
 
-def generate_status(calendar_analysis: Dict, weather_data: Dict) -> Dict:
-    """Generate fun and engaging status messages."""
-    from status_generator import generate_fun_status
-    return generate_fun_status(calendar_analysis, weather_data)
+def generate_status(calendar_analysis: Dict) -> Dict:
+    """Generate status based on calendar analysis."""
+    
+    # Handle OOO
+    if calendar_analysis.get("ooo"):
+        return {
+            "text": "OOO today",
+            "emoji": "palm_tree",
+            "expiration": None
+        }
+    
+    # Handle traveling
+    if calendar_analysis.get("traveling"):
+        return {
+            "text": "Traveling",
+            "emoji": "airplane",
+            "expiration": None
+        }
+    
+    # Handle focus time
+    if calendar_analysis.get("focus_time"):
+        return {
+            "text": "Focus time",
+            "emoji": "headphones",
+            "expiration": None
+        }
+    
+    # Handle meeting density
+    if calendar_analysis["meeting_density"] == "heavy":
+        return {
+            "text": "In meetings today",
+            "emoji": "calendar",
+            "expiration": None
+        }
+    elif calendar_analysis["meeting_density"] == "moderate":
+        return {
+            "text": "Meetings & work",
+            "emoji": "computer",
+            "expiration": None
+        }
+    
+    # Default status
+    return {
+        "text": "Working",
+        "emoji": "computer",
+        "expiration": None
+    }
 
 def main():
-    # Configuration
-    OPENWEATHER_API_KEY = "e87ed82ab8132f15877ae385179114bf"
-    USER_EMAIL = "clararende@squareup.com"
-    LOCATION = "Amsterdam,NL"
+    # Load environment variables
+    USER_EMAIL = os.getenv("USER_EMAIL")
+    if not USER_EMAIL:
+        logger.error("USER_EMAIL environment variable not set")
+        return
     
     logger.info("Starting status update process...")
     
     try:
-        # Initialize Google Calendar context
-        from googlecalendar__get_user_and_calendar_context import get_user_and_calendar_context
-        get_user_and_calendar_context()
-        
         # Get calendar events
         logger.info("Getting calendar events...")
         events = get_todays_events(USER_EMAIL)
@@ -138,14 +156,9 @@ def main():
         calendar_analysis = analyze_calendar(events)
         logger.info(f"Calendar analysis: {calendar_analysis}")
         
-        # Get weather
-        logger.info("Fetching weather...")
-        weather_data = get_weather(LOCATION, OPENWEATHER_API_KEY)
-        logger.info(f"Weather data: {weather_data}")
-        
         # Generate status
         logger.info("Generating status...")
-        status = generate_status(calendar_analysis, weather_data)
+        status = generate_status(calendar_analysis)
         logger.info(f"Generated status: {status}")
         
         # Update Slack status

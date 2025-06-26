@@ -6,7 +6,7 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}Installing Slack Calendar Status...${NC}"
+echo -e "${BLUE}Installing SlackMood AI...${NC}"
 
 # Create virtual environment
 echo -e "\n${BLUE}Creating Python virtual environment...${NC}"
@@ -24,18 +24,17 @@ mkdir -p config
 
 # Create .env file
 echo -e "\n${BLUE}Creating environment file...${NC}"
-cat > .env << EOL
-OPENWEATHER_API_KEY="e87ed82ab8132f15877ae385179114bf"
-USER_EMAIL="clararende@squareup.com"
-TIMEZONE="Europe/Madrid"
+if [ ! -f .env ]; then
+    cat > .env << EOL
+OPENWEATHER_API_KEY=""
+USER_EMAIL=""
+TIMEZONE="Europe/Amsterdam"
 LOCATION="Amsterdam,NL"
 EOL
-
-# Set up cron job
-echo -e "\n${BLUE}Setting up automatic updates...${NC}"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON_PATH="$SCRIPT_DIR/venv/bin/python"
-SCRIPT_PATH="$SCRIPT_DIR/src/run.py"
+    echo -e "${GREEN}Created .env file. Please edit it with your settings.${NC}"
+else
+    echo -e "${BLUE}.env file already exists${NC}"
+fi
 
 # Create logs directory
 mkdir -p logs
@@ -47,9 +46,9 @@ chmod +x src/run.py
 # Create a wrapper script for the cron job
 cat > run_with_env.sh << EOL
 #!/bin/bash
-cd "$SCRIPT_DIR"
+cd "\$(dirname "\$0")"
 source venv/bin/activate
-$PYTHON_PATH $SCRIPT_PATH >> logs/cron.log 2>&1
+./src/run.py >> logs/cron.log 2>&1
 EOL
 
 chmod +x run_with_env.sh
@@ -59,8 +58,8 @@ TEMP_CRON=$(mktemp)
 crontab -l > "$TEMP_CRON" 2>/dev/null
 
 # Add our job if it's not already there
-if ! grep -q "$SCRIPT_PATH" "$TEMP_CRON"; then
-    echo "0 7 * * * $SCRIPT_DIR/run_with_env.sh" >> "$TEMP_CRON"
+if ! grep -q "slackmood-ai" "$TEMP_CRON"; then
+    echo "0 7 * * * $(pwd)/run_with_env.sh" >> "$TEMP_CRON"
     crontab "$TEMP_CRON"
     echo -e "${GREEN}Cron job installed successfully!${NC}"
 else
@@ -78,3 +77,11 @@ echo -e "\n${BLUE}Required Goose Extensions:${NC}"
 echo -e "1. Google Calendar Extension"
 echo -e "2. Slack Extension"
 echo -e "\nPlease ensure these extensions are enabled in your Goose settings."
+
+echo -e "\n${BLUE}Next steps:${NC}"
+echo -e "1. Edit .env file with your settings:"
+echo -e "   - Add your email"
+echo -e "   - Update timezone if needed"
+echo -e "   - Update location if needed"
+echo -e "2. Enable required Goose extensions"
+echo -e "3. Test the setup by running: ./run_with_env.sh"
