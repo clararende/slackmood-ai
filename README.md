@@ -1,67 +1,62 @@
-# Slackmood-ai
+# SlackMood AI
 
 Automatically update your Slack status with fun, context-aware messages based on your Google Calendar events and local weather conditions.
+
+## Prerequisites
+
+- Python 3.8 or higher
+- Goose CLI installed and configured
+- `uvx` package manager (required for MCP servers)
+- Access to Google Calendar
+- Access to Slack
 
 ## Required Goose Extensions
 
 This project requires the following Goose extensions to be enabled:
 
-1. **Google Calendar Extension**
+1. **Google Calendar Extension** (`mcp_gcal@latest`)
    - Provides calendar integration
    - Handles calendar queries and event analysis
    - Manages timezone conversions
 
-2. **Slack Extension**
+2. **Slack Extension** (`mcp_slack`)
    - Manages Slack status updates
    - Handles emoji and status text
    - Provides workspace integration
 
-To enable these extensions:
-1. Open Goose Desktop
-2. Go to Settings (top right menu)
-3. Navigate to the Extensions section
-4. Enable both Google Calendar and Slack extensions
-
-## Features
-
-- 🎭 **Fun Status Messages**: Dynamic, context-aware status updates with personality
-- 🔄 **Automatic Updates**: Updates your Slack status every morning at 7 AM
-- 📅 **Smart Calendar Analysis**: Detects meeting patterns, focus time, and special events
-- 🎯 **Custom Emoji**: Contextual emoji selection based on your activities
-- 📊 **Intelligent Analysis**: Adapts status based on your schedule
-- 🔔 **Detailed Logging**: Keeps track of all updates
-
-## Status Message Examples
-
-| Situation | Example Status |
-|-----------|---------------|
-| Heavy Meetings | "Meeting marathon in progress 🎪" |
-| Focus Time | "In the zone 🧘‍♀️" |
-| Regular Work | "Turning coffee into code 💻" |
-| Travel | "Up in the clouds ✈️" |
-| OOO | "Living my best life 🌺" |
-
-## Prerequisites
-
-- Python 3.8 or higher
-- Goose Desktop with required extensions enabled
-- Access to Google Calendar
-- Access to Slack
-- OpenWeather API key (already configured)
-
 ## Installation
 
-1. Clone this repository:
-   ```bash
-   git clone <repository-url>
-   cd slackmood-ai
-   ```
+### 1. Install uvx (Required for MCP servers)
 
-2. Run the installation script:
-   ```bash
-   chmod +x install.sh
-   ./install.sh
-   ```
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### 2. Configure Goose Extensions
+
+```bash
+goose configure
+```
+
+In the configuration interface:
+- Navigate to "Toggle Extensions"
+- Enable "googlecalendar" and "slack" extensions
+- Save the configuration
+
+### 3. Clone and Setup Project
+
+```bash
+git clone https://github.com/clararende/slackmood-ai.git
+cd slackmood-ai
+```
+
+### 4. Run Installation Script
+
+```bash
+chmod +x install.sh
+./install.sh
+```
 
 The installation script will:
 - Create a Python virtual environment
@@ -77,25 +72,43 @@ The following variables are configured in `.env`:
 
 ```ini
 OPENWEATHER_API_KEY="your-api-key"
-USER_EMAIL="your-email@squareup.com"  # REQUIRED: Must be set for the script to work
+USER_EMAIL="your-email@example.com"  # REQUIRED: Must be set for the script to work
 TIMEZONE="Your/Timezone"
 LOCATION="City,Country"
 ```
 
 **Important:**
-- Before running `./run_with_env.sh`, you must edit the `.env` file and set a valid `USER_EMAIL` (your email address for calendar access). The script will not work until this is set.
+- Before running the project, you must edit the `.env` file and set a valid `USER_EMAIL` (your email address for calendar access). The script will not work until this is set.
 
 ## Usage
 
-### Automatic Updates
-The script runs automatically every morning at 7 AM to set your status for the day.
+### Running with Goose CLI (Recommended)
 
-### Manual Updates
-You can manually update your status at any time:
+The project is designed to work with Goose CLI and its extensions. To run:
 
 ```bash
-./run_with_env.sh
+export PATH="$HOME/.local/bin:$PATH"
+goose run --text "Run SlackMood AI: Get calendar context, query events, analyze schedule, and update Slack status"
 ```
+
+Or create an instruction file:
+
+```bash
+echo "Run SlackMood AI project with calendar analysis and Slack status update" > instructions.txt
+goose run -i instructions.txt
+```
+
+### Manual Execution
+
+You can also run the Python script directly:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+USER_EMAIL="your-email@example.com" TIMEZONE="Europe/Amsterdam" LOCATION="Amsterdam,NL" python3 src/run.py
+```
+
+### Automatic Updates
+The script runs automatically every morning at 7 AM to set your status for the day.
 
 ### Logs
 Check the logs at any time:
@@ -111,7 +124,7 @@ slackmood-ai/
 │   ├── run.py              # Main script
 │   └── status_generator.py # Status message generation
 ├── config/
-│   └── .env               # Configuration
+│   └── config.yml         # Configuration
 ├── logs/
 │   └── cron.log          # Execution logs
 ├── venv/                 # Python virtual environment
@@ -124,17 +137,22 @@ slackmood-ai/
 
 ### Common Issues
 
-1. **Status Not Updating**
+1. **Extensions Not Working**
+   - Ensure `uvx` is installed: `which uvx`
+   - Check extension configuration: `goose configure`
+   - Verify PATH includes `$HOME/.local/bin`
+
+2. **Status Not Updating**
    - Check if required extensions are enabled
    - Check logs: `tail -f logs/cron.log`
    - Verify cron job: `crontab -l`
 
-2. **Wrong Status**
+3. **Wrong Status**
    - Verify Goose extensions are working
    - Check your calendar events
    - Verify timezone settings
 
-3. **Script Errors**
+4. **Script Errors**
    - Ensure all dependencies are installed
    - Check Goose extension status
    - Verify network connectivity
