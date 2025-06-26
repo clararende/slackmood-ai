@@ -205,6 +205,39 @@ Current schedule (7 AM daily):
 0 7 * * * /path/to/slackmood-ai/run_with_env.sh
 ```
 
+## Future Enhancements
+
+### 1. Smart Context Integration
+- **Weather Integration**: Add local weather conditions to status messages (e.g., "☔ Brainstorming while it rains" or "☀️ Coding in the sunshine")
+- **Time-of-day Awareness**: Different message styles for morning/afternoon/evening
+- **Location-based Messages**: Customize messages based on whether you're working from home, office, or a different location
+
+### 2. Enhanced Calendar Intelligence
+- **Meeting Preparation Mode**: Set special statuses 5-10 minutes before meetings (e.g., "🎯 Preparing for the design review")
+- **Post-meeting Recovery**: Add brief "decompress" statuses after long meetings
+- **Smart Duration**: Vary messages based on meeting length (quick sync vs. long workshop)
+- **Participant-aware Messages**: Customize based on who you're meeting with (e.g., "1:1 with team" vs. "Client presentation")
+
+### 3. Productivity Integration
+- **Pomodoro Mode**: Integrate with popular productivity techniques
+- **Focus Time Defender**: Special statuses during focus blocks that indicate urgency level for interruptions
+- **Task Integration**: Connect with todo apps (like Todoist or Asana) to show current focus area
+
+### 4. Team Coordination Features
+- **Lunch Buddy System**: Special statuses for lunch time that can help coordinate team lunches
+- **Team Sync**: Allow team members to opt-in to shared status themes
+- **Meeting Availability**: Show when you're approaching your maximum meeting load for the day
+
+### 5. Wellness & Work-Life Balance
+- **Break Reminders**: Incorporate regular break reminders into status messages
+- **Working Hours Respect**: Smart end-of-day status changes
+- **Wellness Mode**: Integration with health apps to show when you're taking a walking meeting or exercise break
+
+### 6. AI Enhancements
+- **Sentiment Analysis**: Analyze meeting titles/descriptions to set more contextual moods
+- **Pattern Learning**: Learn from your calendar patterns to predict and set more accurate statuses
+- **Custom Personality**: Allow users to define their status message "personality" (professional, playful, minimal, etc.)
+
 ## Security
 
 - API keys are stored locally in `.env`
