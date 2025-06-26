@@ -1,3 +1,5 @@
+from typing import Dict
+
 def generate_status(calendar_analysis: Dict) -> Dict:
     """Generate fun and engaging status messages based on calendar analysis."""
     
