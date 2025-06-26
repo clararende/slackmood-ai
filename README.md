@@ -1,4 +1,4 @@
-# Slack Calendar Status
+# Slackmood-ai
 
 Automatically update your Slack status with fun, context-aware messages based on your Google Calendar events and local weather conditions.
 
@@ -54,7 +54,7 @@ To enable these extensions:
 1. Clone this repository:
    ```bash
    git clone <repository-url>
-   cd slack-calendar-status
+   cd slackmood-ai
    ```
 
 2. Run the installation script:
@@ -103,7 +103,7 @@ tail -f logs/cron.log
 ## Project Structure
 
 ```
-slack-calendar-status/
+slackmood-ai/
 ├── src/
 │   ├── run.py              # Main script
 │   └── status_generator.py # Status message generation
@@ -164,7 +164,7 @@ crontab -e
 
 Current schedule (7 AM daily):
 ```
-0 7 * * * /path/to/slack-calendar-status/run_with_env.sh
+0 7 * * * /path/to/slackmood-ai/run_with_env.sh
 ```
 
 ## Security

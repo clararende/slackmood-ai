@@ -46,7 +46,7 @@ chmod +x src/run.py
 # Create a wrapper script for the cron job
 cat > run_with_env.sh << EOL
 #!/bin/bash
-cd "\$(dirname "\$0")"
+cd "\$(dirname \"\$0\")"
 source venv/bin/activate
 ./src/run.py >> logs/cron.log 2>&1
 EOL
