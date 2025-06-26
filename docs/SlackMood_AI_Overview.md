@@ -34,6 +34,7 @@ Ever set your Slack status and then completely forget about it? Or worse, left i
 
 ### Technical Magic Behind the Scenes 🪄
 - Built with Goose's Google Calendar and Slack extensions
+- Works with both Goose CLI and Goose Desktop
 - Python-powered status generation
 - Intelligent calendar analysis
 - Automated scheduling system
@@ -73,11 +74,25 @@ cd slackmood-ai
 
 ### Requirements 📋
 - Python 3.8+
-- Goose Desktop with:
+- Goose CLI or Goose Desktop with:
   - Google Calendar Extension
   - Slack Extension
 - Access to Google Calendar
 - Access to Slack
+
+### Running SlackMood AI 🏃‍♀️
+
+#### With Goose CLI:
+```bash
+goose run --text "Run SlackMood AI: Get calendar context, query events, analyze schedule, and update Slack status"
+```
+
+#### With Goose Desktop:
+1. Open Goose Desktop
+2. In the chat interface, type:
+   ```
+   Run SlackMood AI: Get calendar context, query events, analyze schedule, and update Slack status
+   ```
 
 ### The Story Behind SlackMood AI 📖
 Born from the desire to make workplace communication more human and fun, SlackMood AI proves that professional doesn't have to mean boring. It's about those small moments of delight when your colleagues smile at your creative status message or when someone says "I love how your status always knows what you're up to!"
@@ -108,7 +123,8 @@ Born from the desire to make workplace communication more human and fun, SlackMo
 ### Get Started! 🎉
 1. Clone the repository
 2. Run the installation script
-3. Watch your Slack status come alive!
+3. Configure Goose extensions (CLI or Desktop)
+4. Watch your Slack status come alive!
 
 ### Links & Resources 🔗
 - GitHub Repository: https://github.com/clararende/slackmood-ai

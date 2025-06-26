@@ -5,7 +5,7 @@ Automatically update your Slack status with fun, context-aware messages based on
 ## Prerequisites
 
 - Python 3.8 or higher
-- Goose CLI installed and configured
+- Goose CLI or Goose Desktop installed and configured
 - `uvx` package manager (required for MCP servers)
 - Access to Google Calendar
 - Access to Slack
@@ -35,9 +35,16 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ### 2. Configure Goose Extensions
 
+#### For Goose CLI:
 ```bash
 goose configure
 ```
+
+#### For Goose Desktop:
+1. Open Goose Desktop
+2. Go to Settings → Extensions
+3. Enable "googlecalendar" and "slack" extensions
+4. Save the configuration
 
 In the configuration interface:
 - Navigate to "Toggle Extensions"
@@ -98,6 +105,15 @@ echo "Run SlackMood AI project with calendar analysis and Slack status update" >
 goose run -i instructions.txt
 ```
 
+### Running with Goose Desktop
+
+1. Open Goose Desktop
+2. In the chat interface, type:
+   ```
+   Run SlackMood AI: Get calendar context, query events, analyze schedule, and update Slack status
+   ```
+3. Goose Desktop will use the same extensions to update your Slack status
+
 ### Manual Execution
 
 You can also run the Python script directly:
@@ -122,6 +138,7 @@ tail -f logs/cron.log
 slackmood-ai/
 ├── src/
 │   ├── run.py              # Main script
+│   ├── slack_handler.py    # Slack API integration (placeholder for direct API calls)
 │   └── status_generator.py # Status message generation
 ├── config/
 │   └── config.yml         # Configuration
@@ -139,13 +156,14 @@ slackmood-ai/
 
 1. **Extensions Not Working**
    - Ensure `uvx` is installed: `which uvx`
-   - Check extension configuration: `goose configure`
+   - Check extension configuration: `goose configure` (CLI) or Settings → Extensions (Desktop)
    - Verify PATH includes `$HOME/.local/bin`
 
 2. **Status Not Updating**
    - Check if required extensions are enabled
    - Check logs: `tail -f logs/cron.log`
    - Verify cron job: `crontab -l`
+   - For Desktop: Ensure you're logged into the correct Slack workspace
 
 3. **Wrong Status**
    - Verify Goose extensions are working
