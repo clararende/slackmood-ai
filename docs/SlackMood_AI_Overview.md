@@ -67,7 +67,7 @@ OOO | "Recharging my batteries" | 🌴
 
 ### Installation in 3... 2... 1... 🚀
 ```bash
-git clone https://github.com/clararende/slackmood-ai.git
+git clone https://github.com/your-username/slackmood-ai.git
 cd slackmood-ai
 ./install.sh
 ```
@@ -127,12 +127,12 @@ Born from the desire to make workplace communication more human and fun, SlackMo
 4. Watch your Slack status come alive!
 
 ### Links & Resources 🔗
-- GitHub Repository: https://github.com/clararende/slackmood-ai
+- GitHub Repository: https://github.com/your-username/slackmood-ai
 - Documentation: See README.md
 - Issues & Features: GitHub Issues
 
-### About the Creator 👋
-Created by Clara Rendé, a Software Engineer at Square who believes workplace tools should spark joy while being professional.
+### About the Project 👋
+SlackMood AI is an open-source project that believes workplace tools should spark joy while being professional. It's designed to make your digital presence more human and engaging.
 
 ---
 

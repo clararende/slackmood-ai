@@ -54,7 +54,7 @@ In the configuration interface:
 ### 3. Clone and Setup Project
 
 ```bash
-git clone https://github.com/clararende/slackmood-ai.git
+git clone https://github.com/your-username/slackmood-ai.git
 cd slackmood-ai
 ```
 
