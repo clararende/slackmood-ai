@@ -77,10 +77,13 @@ The following variables are configured in `.env`:
 
 ```ini
 OPENWEATHER_API_KEY="your-api-key"
-USER_EMAIL="your-email@squareup.com"
+USER_EMAIL="your-email@squareup.com"  # REQUIRED: Must be set for the script to work
 TIMEZONE="Your/Timezone"
 LOCATION="City,Country"
 ```
+
+**Important:**
+- Before running `./run_with_env.sh`, you must edit the `.env` file and set a valid `USER_EMAIL` (your email address for calendar access). The script will not work until this is set.
 
 ## Usage
 
